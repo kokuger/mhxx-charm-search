@@ -130,3 +130,9 @@ button:hover {
 .toggle-group input[type="radio"]:checked + .toggle-option:hover {
   background: #222;
 }
+
+.search-status {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+}
