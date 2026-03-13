@@ -1,59 +1,56 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>MHXX Charm Tool</title>
-
-<link rel="stylesheet" href="style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MHXX Charm Tool</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<h1>MHXX 護石フレーム確認ツール</h1>
-<p class="description">護石条件を入力してください</p>
+  <main class="container">
+    <h1>MHXX 護石フレーム確認ツール</h1>
+    <p class="description">護石条件を入力してください</p>
 
-<div class="row">
-  <div class="form-group">
-    <label>第一スキル</label>
-    <input type="text" id="skill1">
-  </div>
+    <div class="row">
+      <div class="form-group">
+        <label for="skill1">第一スキル</label>
+        <input type="text" id="skill1">
+      </div>
 
-  <div class="form-group">
-    <label>第一スキル値</label>
-    <input type="number" id="skill1Value">
-  </div>
-</div>
+      <div class="form-group">
+        <label for="skill1Value">第一スキル値</label>
+        <select id="skill1Value"></select>
+      </div>
+    </div>
 
-<div class="row">
-  <div class="form-group">
-    <label>第二スキル</label>
-    <input type="text" id="skill2">
-  </div>
+    <div class="row">
+      <div class="form-group">
+        <label for="skill2">第二スキル</label>
+        <input type="text" id="skill2" placeholder="なしなら空欄">
+      </div>
 
-  <div class="form-group">
-    <label>第二スキル値</label>
-    <input type="number" id="skill2Value">
-  </div>
-</div>
+      <div class="form-group">
+        <label for="skill2Value">第二スキル値</label>
+        <select id="skill2Value"></select>
+      </div>
+    </div>
 
-<div class="form-group">
-  <label>スロット数</label>
-  <select id="slot">
-    <option value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-  </select>
-</div>
+    <div class="form-group">
+      <label for="slot">スロット数</label>
+      <select id="slot">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+    </div>
 
-<button id="checkButton">入力確認</button>
+    <button id="checkButton">入力確認</button>
 
-<div id="result" class="result-box">
-ここに結果が表示されます
-</div>
+    <div id="result" class="result-box">ここに結果が表示されます</div>
+  </main>
 
-<script src="script.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
