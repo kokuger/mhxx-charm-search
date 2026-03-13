@@ -14,7 +14,7 @@
     <div class="row">
       <div class="form-group">
         <label for="skill1">第一スキル</label>
-        <input type="text" id="skill1" value="連撃">
+        <input type="text" id="skill1" list="skillList" value="連撃">
       </div>
 
       <div class="form-group">
@@ -44,8 +44,7 @@
     <div class="row">
       <div class="form-group">
         <label for="skill2">第二スキル</label>
-        <!-- <input type="text" id="skill2" placeholder="なしなら空欄"> -->
-        <input type="text" id="skill2" value="痛撃">
+        <input type="text" id="skill2" list="skillList" value="痛撃">
       </div>
 
       <div class="form-group">
@@ -114,6 +113,7 @@
     <div id="searchStatus" class="search-status"></div>
     
     <div id="result" class="result-box">ここに検索結果が表示されます</div>
+    <datalist id="skillList"></datalist>
   </main>
 
   <script src="script.js"></script>
