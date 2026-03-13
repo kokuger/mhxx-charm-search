@@ -419,7 +419,8 @@ button.addEventListener("click", () => {
       Number(slot),
       "マカ"
     );
-
+    console.log("parameter =", p);
+    
     const results = searchFrames(p, 100000);
 
     if (results.length === 0) {
