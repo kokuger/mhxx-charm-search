@@ -8,8 +8,8 @@
 </head>
 <body>
   <main class="container">
-    <h1>MHXX 護石フレーム確認ツール</h1>
-    <p class="description">条件を入力して検索します（現在はマカ / blue テーブル固定）</p>
+    <h1>こくじゃーの MHXX 護石フレーム確認ツール</h1>
+    <h2>チャンネル登録しないで使う人は神おま出ない呪いかけます</h2>
 
     <div class="row">
       <div class="form-group">
@@ -102,10 +102,21 @@
         <option value="white">なぞのお守り(動かないw)</option>
       </select>
     </div>
+
     
+    <div class="row">
+      <div class="form-group">
+        <label for="startFrame">検索開始フレーム</label>
+        <input type="number" id="startFrame" value="0" min="0" step="1">
+        
+        <label for="maxFrames">検索フレーム数</label>
+        <input type="number" id="maxFrames" value="100000" min="1" step="1000">
+      </div>
+    </div>
+
     <div class="form-group">
-      <label for="maxFrames">検索フレーム数(100000000が限界)</label>
-      <input type="number" id="maxFrames" value="100000" min="1" step="1000">
+      <label for="displayLimit">表示件数</label>
+      <input type="number" id="displayLimit" value="10" min="1" step="1">
     </div>
     
     <button id="checkButton">検索</button>
