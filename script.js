@@ -421,7 +421,7 @@ button.addEventListener("click", () => {
     );
     console.log("parameter =", p);
     
-    const results = searchFrames(p, 100000);
+    const results = searchFrames(p, maxFrames);
 
     if (results.length === 0) {
   result.textContent =
@@ -432,7 +432,7 @@ button.addEventListener("click", () => {
 第二スキル: ${skill2Name || "なし"}
 第二スキル値: ${skill2Name ? skill2Value : "なし"}
 スロット数: ${slot}
-検索範囲: 0 ~ 99999 frame
+検索範囲: 0 ~ ${maxFrames - 1} frame
 現在テーブル: blue
 抽選元: マカ`;
   return;
