@@ -481,10 +481,15 @@ button.addEventListener("click", () => {
     const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
     status.textContent = `検索中... ${elapsed}秒`;
   }, 100);
+
+  // ここで一度ブラウザに描画させる
+  await new Promise(requestAnimationFrame);
   
   setTable(charmKind);
   
   if (charmKind === "yellow" || charmKind === "white") {
+    clearInterval(timer);
+    status.textContent = "";
     result.textContent = "このお守りはまだ未対応です。\n現在は風化・古びたのみ検索できます。";
     return;
   }
