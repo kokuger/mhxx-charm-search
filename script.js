@@ -462,7 +462,7 @@ function searchFrames(param, maxFrames) {
   return results;
 }
 
-async function searchFramesByCharmAsync(param, maxFrames, chunkSize = 5000, onProgress = null) {
+async function searchFramesByCharmAsync(param, startFrame, maxFrames, chunkSize = 5000, onProgress = null) {
   init();
 
   const results = [];
@@ -470,6 +470,11 @@ async function searchFramesByCharmAsync(param, maxFrames, chunkSize = 5000, onPr
 
   const targetSkill1 = currentTable.skill1[_id1];
   const targetSkill2 = _id2 === null ? null : currentTable.skill2[_id2];
+
+  // 開始位置まで進める
+  for (let i = 0; i < startFrame; i++) {
+    roll();
+  }
 
   for (let start = 0; start < maxFrames; start += chunkSize) {
     const end = Math.min(start + chunkSize, maxFrames);
@@ -516,6 +521,9 @@ button.addEventListener("click", async () => {
   const maxFrames = Number(document.getElementById("maxFrames").value);
   const originType = document.querySelector('input[name="originType"]:checked').value;
   const charmKind = document.getElementById("charmKind").value;
+  const startFrame = Number(document.getElementById("startFrame").value);
+  const displayLimit = Number(document.getElementById("displayLimit").value);
+  
   const status = document.getElementById("searchStatus");
   const startTime = performance.now();
   status.textContent = "検索中...";
@@ -546,10 +554,9 @@ button.addEventListener("click", async () => {
       originType
     );
     
-    // const results = searchFrames(p, maxFrames);
-
     const results = await searchFramesByCharmAsync(
       p,
+      startFrame,
       maxFrames,
       100000,
       (done, total) => {
@@ -574,19 +581,12 @@ button.addEventListener("click", async () => {
       return;
     }
 
-    result.textContent = `ヒット件数: ${results.length}
-      最初のヒット
-      frame: ${results[0].frame}
-      時刻換算: ${results[0].watch}
-  
-      第一スキル: ${skill1Name}
-      第一スキル値: ${skill1Value}
-      第二スキル: ${skill2Name || "なし"}
-      第二スキル値: ${skill2Name ? skill2Value : "なし"}
-      スロット数: ${slot}
-      検索範囲: 0 ~ ${maxFrames - 1} frame
-      現在テーブル:  ${charmKindLabels[charmKind]}
-      抽選元: マカ`;
+    const preview = shownResults
+      .map((r, idx) => `${idx + 1}. frame: ${r.frame} / ${r.watch}`).join("\n");
+    
+    result.textContent = `ヒット件数: ${results.length}、表示件数: ${shownResults.length}
+    ${preview}`
+
   } catch (error) {
     result.textContent = `エラー: ${error.message}`;
     console.error(error);
