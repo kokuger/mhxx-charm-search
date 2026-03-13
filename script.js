@@ -508,6 +508,47 @@ async function searchFramesByCharmAsync(param, startFrame, maxFrames, chunkSize 
 
   return results;
 }
+function formatCharmLine(index, c) {
+  const skill1Name = skill[c[0]];
+  const skill2Name = c[2] === null ? "◯◯----" : skill[c[2]];
+  const sp2Text = c[2] === null ? "" : String(c[3]);
+
+  return `${String(index).padStart(4, " ")}  ${skill1Name}  ${c[1]} ${skill2Name} ${sp2Text.padStart(3, " ")} S${c[4]} RARE${c[7]}`;
+}
+
+async function listCharmsAsync(startFrame, count, originValue, chunkSize = 2000, onProgress = null) {
+  init();
+
+  const results = [];
+
+  for (let i = 0; i < startFrame; i++) {
+    roll();
+  }
+
+  for (let start = 0; start < count; start += chunkSize) {
+    const end = Math.min(start + chunkSize, count);
+
+    for (let i = start; i < end; i++) {
+      const c = getCharm(originValue);
+      results.push({
+        index: i,
+        frame: f - 7,
+        watch: watch(f - 7),
+        charm: c,
+        line: formatCharmLine(i, c)
+      });
+      roll();
+    }
+
+    if (onProgress) {
+      onProgress(end, count);
+    }
+
+    await new Promise(requestAnimationFrame);
+  }
+
+  return results;
+}
 
 const button = document.getElementById("checkButton");
 const result = document.getElementById("result");
@@ -523,6 +564,7 @@ button.addEventListener("click", async () => {
   const charmKind = document.getElementById("charmKind").value;
   const startFrame = Number(document.getElementById("startFrame").value);
   const displayLimit = Number(document.getElementById("displayLimit").value);
+  const displayMode = document.querySelector('input[name="displayMode"]:checked').value;
   
   const status = document.getElementById("searchStatus");
   const startTime = performance.now();
@@ -545,6 +587,29 @@ button.addEventListener("click", async () => {
   }
   
   try {
+    if (displayMode === "list") {
+      const originValue = origin.indexOf(originType);
+      const listResults = await listCharmsAsync(
+        startFrame,
+        maxFrames,
+        originValue,
+        2000,
+        (done, total) => {
+          status.textContent = `一覧生成中... ${done}/${total}`;
+        }
+      );
+      const shownResults = listResults.slice(0, displayLimit);
+      const preview = shownResults.map(r => r.line).join("\n");
+
+      status.textContent = `一覧生成完了 (${shownResults.length}件表示)`;
+      result.textContent = `開始フレーム: ${startFrame}
+        表示件数: ${shownResults.length}
+        現在テーブル: ${charmKindLabels[charmKind]}
+        抽選元: ${originType}
+        ${preview}`;
+      return;
+    }
+    
     const p = parameter(
       skill1Name,
       Number(skill1Value),
