@@ -177,6 +177,13 @@ let r6 = 0;
 
 let currentTable = null;
 
+const charmKindLabels = {
+  blue: "風化したお守り",
+  red: "古びたお守り",
+  yellow: "光るお守り",
+  white: "なぞのお守り"
+};
+
 function setTable(color) {
   currentTable = charmTables[color];
 }
@@ -484,7 +491,7 @@ button.addEventListener("click", () => {
 第二スキル値: ${skill2Name ? skill2Value : "なし"}
 スロット数: ${slot}
 検索範囲: 0 ~ ${maxFrames - 1} frame
-現在テーブル: blue
+現在テーブル: ${charmKindLabels[charmKind]}
 抽選元: ${originType}`;
   return;
 }
@@ -502,7 +509,7 @@ frame: ${results[0].frame}
 第二スキル値: ${skill2Name ? skill2Value : "なし"}
 スロット数: ${slot}
 検索範囲: 0 ~ ${maxFrames - 1} frame
-現在テーブル: blue
+現在テーブル:  ${charmKindLabels[charmKind]}
 抽選元: マカ`;
   } catch (error) {
     result.textContent = `エラー: ${error.message}`;
