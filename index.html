@@ -7,7 +7,10 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<input type="text" id="skill1" value="連撃">
+  <select id="skill1Value">
 
+    
   <main class="container">
     <h1>MHXX 護石フレーム確認ツール</h1>
     <p class="description">条件を入力して検索します（現在はマカ / blue テーブル固定）</p>
@@ -15,7 +18,7 @@
     <div class="row">
       <div class="form-group">
         <label for="skill1">第一スキル</label>
-        <input type="text" id="skill1" placeholder="例: 泡沫">
+        <input type="text" id="skill1" value="連撃">
       </div>
 
       <div class="form-group">
@@ -26,7 +29,7 @@
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
-          <option value="4">4</option>
+          <option value="4" selected>4</option>
           <option value="5">5</option>
           <option value="6">6</option>
           <option value="7">7</option>
@@ -45,7 +48,8 @@
     <div class="row">
       <div class="form-group">
         <label for="skill2">第二スキル</label>
-        <input type="text" id="skill2" placeholder="なしなら空欄">
+        <!-- <input type="text" id="skill2" placeholder="なしなら空欄"> -->
+        <input type="text" id="skill2" value="痛撃">
       </div>
 
       <div class="form-group">
@@ -57,7 +61,7 @@
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
-          <option value="5">5</option>
+          <option value="5" selected>5</option>
           <option value="6">6</option>
           <option value="7">7</option>
           <option value="8">8</option>
@@ -78,7 +82,7 @@
         <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
-        <option value="3">3</option>
+        <option value="3" selected>3</option>
       </select>
     </div>
 
