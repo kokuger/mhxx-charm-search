@@ -455,3 +455,46 @@ frame: ${results[0].frame}
     console.error(error);
   }
 });
+
+function debugFirstN(n, originValue = 0) {
+  init();
+
+  const rows = [];
+
+  for (let i = 0; i < n; i++) {
+    roll();
+    const c = getCharm(originValue);
+
+    rows.push({
+      i,
+      frame: f - 7,
+      r0,
+      r1,
+      r2,
+      r3,
+      charm: [...c]
+    });
+  }
+
+  console.table(rows);
+}
+
+function debugRng(n) {
+  init();
+
+  const rows = [];
+
+  for (let i = 0; i < n; i++) {
+    rows.push({
+      step: i,
+      x: x >>> 0,
+      y: y >>> 0,
+      z: z >>> 0,
+      w: w >>> 0,
+      f
+    });
+    ascend();
+  }
+
+  console.table(rows);
+}
