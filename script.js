@@ -581,8 +581,10 @@ button.addEventListener("click", async () => {
       return;
     }
 
+    const shownResults = (results || []).slice(0, displayLimit);
     const preview = shownResults
-      .map((r, idx) => `${idx + 1}. frame: ${r.frame} / ${r.watch}`).join("\n");
+      .map((r, idx) => `${idx + 1}. frame: ${r.frame} / ${r.watch}`)
+      .join("\n");
     
     result.textContent = `ヒット件数: ${results.length}、表示件数: ${shownResults.length}
     ${preview}`
