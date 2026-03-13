@@ -472,7 +472,11 @@ function debugFirstN(n, originValue = 0) {
       r1,
       r2,
       r3,
-      charm: [...c]
+      skill1: skill[c[0]],
+      sp1: c[1],
+      skill2: c[2] === null ? null : skill[c[2]],
+      sp2: c[3],
+      slot: c[4]
     });
   }
 
