@@ -73,6 +73,12 @@ button:hover {
   word-break: break-word;
 }
 
+.form-group input,
+.form-group select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 /* スマホ対応 */
 @media (max-width: 640px) {
   .container {
@@ -84,7 +90,6 @@ button:hover {
   }
 
   .row {
-    flex-direction: column;
     gap: 12px;
     margin-bottom: 16px;
   }
