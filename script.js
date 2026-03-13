@@ -423,7 +423,7 @@ button.addEventListener("click", () => {
     const results = searchFrames(p, 100000);
 
     if (results.length === 0) {
-      result.textContent =
+  result.textContent =
 `見つかりませんでした
 
 第一スキル: ${skill1Name}
@@ -431,9 +431,11 @@ button.addEventListener("click", () => {
 第二スキル: ${skill2Name || "なし"}
 第二スキル値: ${skill2Name ? skill2Value : "なし"}
 スロット数: ${slot}
-検索範囲: 0 ~ 99999 frame`;
-      return;
-    }
+検索範囲: 0 ~ 99999 frame
+現在テーブル: blue
+抽選元: マカ`;
+  return;
+}
 
     result.textContent =
 `ヒット件数: ${results.length}
