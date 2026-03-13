@@ -115,7 +115,7 @@ const skillWidth = '　<2';
 // =========================
 // RNG state
 // =========================
-const s = [0x0194FD72, 0x79E6C985, 0x08DD9701, 0x41CFC9E1];
+const s = [0x0194FD72,0x79E6C985,0x08DD9701,0x41CFCE91];
 
 let x = 0;
 let y = 0;
