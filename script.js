@@ -460,6 +460,13 @@ button.addEventListener("click", () => {
   const maxFrames = Number(document.getElementById("maxFrames").value);
   const originType = document.querySelector('input[name="originType"]:checked').value;
   const charmKind = document.getElementById("charmKind").value;
+  const status = document.getElementById("searchStatus");
+  const startTime = performance.now();
+  status.textContent = "検索中...";
+  const timer = setInterval(() => {
+    const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+    status.textContent = `検索中... ${elapsed}秒`;
+  }, 100);
   
   setTable(charmKind);
   
@@ -481,36 +488,36 @@ button.addEventListener("click", () => {
     
     const results = searchFrames(p, maxFrames);
 
+    clearInterval(timer);
+    const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+    status.textContent = `検索完了 (${elapsed}秒)`;
+    
     if (results.length === 0) {
-  result.textContent =
-`見つかりませんでした
+      result.textContent = `見つかりませんでした
+      第一スキル: ${skill1Name}
+      第一スキル値: ${skill1Value}
+      第二スキル: ${skill2Name || "なし"}
+      第二スキル値: ${skill2Name ? skill2Value : "なし"}
+      スロット数: ${slot}
+      検索範囲: 0 ~ ${maxFrames - 1} frame
+      現在テーブル: ${charmKindLabels[charmKind]}
+      抽選元: ${originType}`;
+      return;
+    }
 
-第一スキル: ${skill1Name}
-第一スキル値: ${skill1Value}
-第二スキル: ${skill2Name || "なし"}
-第二スキル値: ${skill2Name ? skill2Value : "なし"}
-スロット数: ${slot}
-検索範囲: 0 ~ ${maxFrames - 1} frame
-現在テーブル: ${charmKindLabels[charmKind]}
-抽選元: ${originType}`;
-  return;
-}
-
-    result.textContent =
-`ヒット件数: ${results.length}
-
-最初のヒット
-frame: ${results[0].frame}
-時刻換算: ${results[0].watch}
-
-第一スキル: ${skill1Name}
-第一スキル値: ${skill1Value}
-第二スキル: ${skill2Name || "なし"}
-第二スキル値: ${skill2Name ? skill2Value : "なし"}
-スロット数: ${slot}
-検索範囲: 0 ~ ${maxFrames - 1} frame
-現在テーブル:  ${charmKindLabels[charmKind]}
-抽選元: マカ`;
+    result.textContent = `ヒット件数: ${results.length}
+      最初のヒット
+      frame: ${results[0].frame}
+      時刻換算: ${results[0].watch}
+  
+      第一スキル: ${skill1Name}
+      第一スキル値: ${skill1Value}
+      第二スキル: ${skill2Name || "なし"}
+      第二スキル値: ${skill2Name ? skill2Value : "なし"}
+      スロット数: ${slot}
+      検索範囲: 0 ~ ${maxFrames - 1} frame
+      現在テーブル:  ${charmKindLabels[charmKind]}
+      抽選元: マカ`;
   } catch (error) {
     result.textContent = `エラー: ${error.message}`;
     console.error(error);
