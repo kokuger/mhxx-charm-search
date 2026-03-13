@@ -238,14 +238,32 @@ function rare(slotNum, fill) {
 }
 
 function parameter(str1, num1, str2, num2, num3, str3) {
-  const _id1 = currentTable.skill1.indexOf(skill.indexOf(str1));
+  const skill1RawId = skill.indexOf(str1);
+  if (skill1RawId === -1) {
+    throw new Error(`第一スキルが見つかりません: ${str1}`);
+  }
+
+  const _id1 = currentTable.skill1.indexOf(skill1RawId);
+  if (_id1 === -1) {
+    throw new Error(`第一スキルは現在のテーブルに存在しません: ${str1}`);
+  }
+
   const _sp1 = Number(num1);
 
   let _id2 = null;
   let _sp2 = 0;
 
   if (str2 !== null && str2 !== "") {
-    _id2 = currentTable.skill2.indexOf(skill.indexOf(str2));
+    const skill2RawId = skill.indexOf(str2);
+    if (skill2RawId === -1) {
+      throw new Error(`第二スキルが見つかりません: ${str2}`);
+    }
+
+    _id2 = currentTable.skill2.indexOf(skill2RawId);
+    if (_id2 === -1) {
+      throw new Error(`第二スキルは現在のテーブルに存在しません: ${str2}`);
+    }
+
     _sp2 = Number(num2);
   }
 
@@ -324,8 +342,17 @@ function searchOne(_id1, _sp1, _id2, _sp2, _slot, _origin, _len1, _len2) {
   roll();
   const c = getCharm(_origin);
 
+  const targetSkill1 = currentTable.skill1[_id1];
+  const targetSkill2 = _id2 === null ? null : currentTable.skill2[_id2];
+
+  // 第二スキルなし検索
   if (_id2 === null) {
-    if (mod(r0, _len1) === _id1 && c[1] === _sp1 && c[2] === null && c[4] === _slot) {
+    if (
+      c[0] === targetSkill1 &&
+      c[1] === _sp1 &&
+      c[2] === null &&
+      c[4] === _slot
+    ) {
       return {
         found: true,
         frame: f - 7,
@@ -334,12 +361,11 @@ function searchOne(_id1, _sp1, _id2, _sp2, _slot, _origin, _len1, _len2) {
       };
     }
   } else {
+    // 第二スキルあり検索
     if (
-      mod(r0, _len1) === _id1 &&
-      mod(r2, 100) >= currentTable.th &&
-      mod(r3, _len2) === _id2 &&
+      c[0] === targetSkill1 &&
       c[1] === _sp1 &&
-      c[2] !== null &&
+      c[2] === targetSkill2 &&
       c[3] === _sp2 &&
       c[4] === _slot
     ) {
