@@ -95,3 +95,38 @@ button:hover {
     width: 100%;
   }
 }
+
+.toggle-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.toggle-group input[type="radio"] {
+  display: none;
+}
+
+.toggle-option {
+  display: inline-block;
+  padding: 10px 16px;
+  border: 1px solid #bbb;
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.15s ease;
+}
+
+.toggle-group input[type="radio"]:checked + .toggle-option {
+  background: #222;
+  color: #fff;
+  border-color: #222;
+}
+
+.toggle-option:hover {
+  background: #f0f0f0;
+}
+
+.toggle-group input[type="radio"]:checked + .toggle-option:hover {
+  background: #222;
+}
