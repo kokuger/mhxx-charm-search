@@ -409,6 +409,7 @@ button.addEventListener("click", () => {
   const skill2Name = document.getElementById("skill2").value.trim();
   const skill2Value = document.getElementById("skill2Value").value;
   const slot = document.getElementById("slot").value;
+  const maxFrames = Number(document.getElementById("maxFrames").value);
 
   try {
     const p = parameter(
