@@ -184,6 +184,20 @@ const charmKindLabels = {
   white: "なぞのお守り"
 };
 
+function setupSkillDatalist() {
+  const skillList = document.getElementById("skillList");
+  if (!skillList) return;
+
+  skillList.innerHTML = "";
+
+  skill.forEach((name) => {
+    const option = document.createElement("option");
+    option.value = name;
+    skillList.appendChild(option);
+  });
+}
+setupSkillDatalist();
+
 function setTable(color) {
   currentTable = charmTables[color];
 }
