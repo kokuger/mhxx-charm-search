@@ -462,6 +462,48 @@ function searchFrames(param, maxFrames) {
   return results;
 }
 
+async function searchFramesByCharmAsync(param, maxFrames, chunkSize = 5000, onProgress = null) {
+  init();
+
+  const results = [];
+  const [_id1, _sp1, _id2, _sp2, _slot, _origin] = param;
+
+  const targetSkill1 = currentTable.skill1[_id1];
+  const targetSkill2 = _id2 === null ? null : currentTable.skill2[_id2];
+
+  for (let start = 0; start < maxFrames; start += chunkSize) {
+    const end = Math.min(start + chunkSize, maxFrames);
+
+    for (let i = start; i < end; i++) {
+      roll();
+      const c = getCharm(_origin);
+
+      const hit =
+        c[0] === targetSkill1 &&
+        c[1] === _sp1 &&
+        c[2] === targetSkill2 &&
+        c[3] === _sp2 &&
+        c[4] === _slot;
+
+      if (hit) {
+        results.push({
+          frame: f - 7,
+          watch: watch(f - 7),
+          charm: c
+        });
+      }
+    }
+
+    if (onProgress) {
+      onProgress(end, maxFrames);
+    }
+
+    await new Promise(requestAnimationFrame);
+  }
+
+  return results;
+}
+
 const button = document.getElementById("checkButton");
 const result = document.getElementById("result");
 
@@ -503,10 +545,18 @@ button.addEventListener("click", async () => {
       Number(slot),
       originType
     );
-    console.log("parameter =", p);
     
-    const results = searchFrames(p, maxFrames);
+    // const results = searchFrames(p, maxFrames);
 
+    const results = await searchFramesByCharmAsync(
+      p,
+      maxFrames,
+      5000,
+      (done, total) => {
+        status.textContent = `検索中... ${done}/${total}`;
+      }
+    );
+    
     clearInterval(timer);
     const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
     status.textContent = `検索完了 (${elapsed}秒)`;
@@ -542,72 +592,3 @@ button.addEventListener("click", async () => {
     console.error(error);
   }
 });
-
-function debugFirstN(n, originValue = 0) {
-  init();
-
-  const rows = [];
-
-  for (let i = 0; i < n; i++) {
-    roll();
-    const c = getCharm(originValue);
-
-    rows.push({
-      i,
-      frame: f - 7,
-      r0,
-      r1,
-      r2,
-      r3,
-      r4,
-      r5,
-      r6,
-      w,
-      skill1: skill[c[0]],
-      sp1: c[1],
-      skill2: c[2] === null ? null : skill[c[2]],
-      sp2: c[3],
-      slot: c[4]
-    });
-  }
-
-  console.table(rows);
-}
-
-function debugRange(startFrame, count, originValue = 0) {
-  init();
-
-  const rows = [];
-
-  for (let i = 0; i < startFrame; i++) {
-    roll();
-  }
-
-  for (let i = 0; i < count; i++) {
-    const c = getCharm(originValue);
-
-    rows.push({
-      index: i,
-      frame: f - 7,
-      r0,
-      r1,
-      r2,
-      r3,
-      r4,
-      r5,
-      r6,
-      skill1: skill[c[0]],
-      sp1: c[1],
-      skill2: c[2] === null ? null : skill[c[2]],
-      sp2: c[3],
-      slot: c[4],
-      fill: c[5],
-      q5mod100: c[6],
-      rare: c[7]
-    });
-
-    roll();
-  }
-
-  console.table(rows);
-}
