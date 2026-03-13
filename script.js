@@ -138,8 +138,6 @@ function setTable(color) {
   currentTable = charmTables[color];
 }
 
-setTable("blue");
-
 function u32(n) {
   return n >>> 0;
 }
@@ -411,6 +409,14 @@ button.addEventListener("click", () => {
   const slot = document.getElementById("slot").value;
   const maxFrames = Number(document.getElementById("maxFrames").value);
   const originType = document.querySelector('input[name="originType"]:checked').value;
+  const charmKind = document.getElementById("charmKind").value;
+  
+  setTable(charmKind);
+  
+  if (charmKind === "yellow" || charmKind === "white") {
+    result.textContent = "このお守りはまだ未対応です。\n現在は風化・古びたのみ検索できます。";
+    return;
+  }
   
   try {
     const p = parameter(
