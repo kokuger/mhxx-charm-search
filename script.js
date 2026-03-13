@@ -490,21 +490,39 @@ function debugFirstN(n, originValue = 0) {
   console.table(rows);
 }
 
-function debugRng(n) {
+function debugRange(startFrame, count, originValue = 0) {
   init();
 
   const rows = [];
 
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < startFrame; i++) {
+    roll();
+  }
+
+  for (let i = 0; i < count; i++) {
+    const c = getCharm(originValue);
+
     rows.push({
-      step: i,
-      x: x >>> 0,
-      y: y >>> 0,
-      z: z >>> 0,
-      w: w >>> 0,
-      f
+      index: i,
+      frame: f - 7,
+      r0,
+      r1,
+      r2,
+      r3,
+      r4,
+      r5,
+      r6,
+      skill1: skill[c[0]],
+      sp1: c[1],
+      skill2: c[2] === null ? null : skill[c[2]],
+      sp2: c[3],
+      slot: c[4],
+      fill: c[5],
+      q5mod100: c[6],
+      rare: c[7]
     });
-    ascend();
+
+    roll();
   }
 
   console.table(rows);
