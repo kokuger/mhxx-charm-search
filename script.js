@@ -1,26 +1,5 @@
 const button = document.getElementById("checkButton");
 const result = document.getElementById("result");
-const skill1ValueSelect = document.getElementById("skill1Value");
-const skill2ValueSelect = document.getElementById("skill2Value");
-
-function fillSkillValueOptions(selectElement) {
-  selectElement.innerHTML = "";
-
-  const emptyOption = document.createElement("option");
-  emptyOption.value = "";
-  emptyOption.textContent = "選択してください";
-  selectElement.appendChild(emptyOption);
-
-  for (let i = 0; i <= 15; i++) {
-    const option = document.createElement("option");
-    option.value = String(i);
-    option.textContent = String(i);
-    selectElement.appendChild(option);
-  }
-}
-
-fillSkillValueOptions(skill1ValueSelect);
-fillSkillValueOptions(skill2ValueSelect);
 
 button.addEventListener("click", () => {
   const skill1 = document.getElementById("skill1").value.trim();
