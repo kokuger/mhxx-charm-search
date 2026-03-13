@@ -410,7 +410,8 @@ button.addEventListener("click", () => {
   const skill2Value = document.getElementById("skill2Value").value;
   const slot = document.getElementById("slot").value;
   const maxFrames = Number(document.getElementById("maxFrames").value);
-
+  const originType = document.querySelector('input[name="originType"]:checked').value;
+  
   try {
     const p = parameter(
       skill1Name,
@@ -418,7 +419,7 @@ button.addEventListener("click", () => {
       skill2Name === "" ? null : skill2Name,
       skill2Value === "" ? 0 : Number(skill2Value),
       Number(slot),
-      "マカ"
+      originType
     );
     console.log("parameter =", p);
     
@@ -435,7 +436,7 @@ button.addEventListener("click", () => {
 スロット数: ${slot}
 検索範囲: 0 ~ ${maxFrames - 1} frame
 現在テーブル: blue
-抽選元: マカ`;
+抽選元: ${originType}`;
   return;
 }
 
