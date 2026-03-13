@@ -551,7 +551,7 @@ button.addEventListener("click", async () => {
     const results = await searchFramesByCharmAsync(
       p,
       maxFrames,
-      5000,
+      100000,
       (done, total) => {
         status.textContent = `検索中... ${done}/${total}`;
       }
