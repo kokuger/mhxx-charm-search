@@ -509,7 +509,8 @@ async function searchFramesByCharmAsync(param, startFrame, maxFrames, chunkSize 
   return results;
 }
 
-function formatCharmLine(index, c) {
+function formatCharmLine(relativeIndex, c) {
+  const left = String(relativeIndex).padStart(4, " ");
 
   const skill1Name = skill[c[0]];
   const sp1 = String(c[1]).padStart(2, " ");
@@ -525,10 +526,7 @@ function formatCharmLine(index, c) {
     sp2 = String(c[3]).padStart(2, "0");
   }
 
-  const slot = `S${c[4]}`;
-  const rare = `RARE${c[7]}`;
-
-  return `${index}  ${skill1Name}  ${sp1} ${skill2Name}  ${sp2} ${slot} ${rare}`;
+  return `${left}  ${skill1Name}  ${sp1} ${skill2Name}  ${sp2} S${c[4]} RARE${c[7]}`;
 }
 
 async function listCharmsAsync(startFrame, count, originValue, chunkSize = 2000, onProgress = null) {
