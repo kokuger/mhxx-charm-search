@@ -622,6 +622,10 @@ button.addEventListener("click", async () => {
         現在テーブル: ${charmKindLabels[charmKind]}
         抽選元: ${originType}
         ${preview}`;
+
+      clearInterval(timer);
+      const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+      status.textContent = `検索完了 (${elapsed}秒)`;
       return;
     }
     
