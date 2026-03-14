@@ -600,30 +600,30 @@ button.addEventListener("click", async () => {
   }
   
   try {
-    if (displayMode === "list") {
+    if (displayMode === "around") {
       const originValue = origin.indexOf(originType);
-      const listResults = await listCharmsAsync(
+    
+      const aroundResults = await listAroundFramesAsync(
         startFrame,
-        maxFrames,
+        20,
         originValue,
         2000,
         (done, total) => {
-          status.textContent = `一覧生成中... ${done}/${total}`;
+          status.textContent = `前後表示を生成中... ${done}/${total}`;
         }
       );
-      const shownResults = listResults.slice(0, displayLimit);
-      const preview = shownResults.map(r => r.line).join("\n");
-
-      status.textContent = `一覧生成完了 (${shownResults.length}件表示)`;
-      result.textContent = `開始フレーム: ${startFrame}
-        表示件数: ${shownResults.length}
-        現在テーブル: ${charmKindLabels[charmKind]}
-        抽選元: ${originType}
-        ${preview}`;
-
-      clearInterval(timer);
-      const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-      status.textContent = `検索完了 (${elapsed}秒)`;
+    
+      const preview = aroundResults.map(r => r.line).join("\n");
+    
+      status.textContent = `前後表示完了 (${aroundResults.length}件)`;
+    
+      result.textContent = `中心フレーム: ${startFrame}
+    表示範囲: ${Math.max(0, startFrame - 20)} ～ ${startFrame + 20}
+    現在テーブル: ${charmKindLabels[charmKind]}
+    抽選元: ${originType}
+    
+    ${preview}`;
+    
       return;
     }
     
