@@ -529,32 +529,36 @@ function formatCharmLine(relativeIndex, c) {
   return `${left}  ${skill1Name}  ${sp1} ${skill2Name}  ${sp2} S${c[4]} RARE${c[7]}`;
 }
 
-async function listCharmsAsync(startFrame, count, originValue, chunkSize = 2000, onProgress = null) {
+async function listAroundFramesAsync(centerFrame, radius, originValue, chunkSize = 2000, onProgress = null) {
   init();
 
   const results = [];
+  const startFrame = Math.max(0, centerFrame - radius);
+  const totalCount = radius * 2 + 1;
 
   for (let i = 0; i < startFrame; i++) {
     roll();
   }
 
-  for (let start = 0; start < count; start += chunkSize) {
-    const end = Math.min(start + chunkSize, count);
+  for (let start = 0; start < totalCount; start += chunkSize) {
+    const end = Math.min(start + chunkSize, totalCount);
 
     for (let i = start; i < end; i++) {
       const c = getCharm(originValue);
+
       results.push({
-        index: i,
+        relativeIndex: startFrame + i - centerFrame,
         frame: f - 7,
         watch: watch(f - 7),
         charm: c,
-        line: formatCharmLine(i, c)
+        line: formatCharmLine(startFrame + i - centerFrame, c)
       });
+
       roll();
     }
 
     if (onProgress) {
-      onProgress(end, count);
+      onProgress(end, totalCount);
     }
 
     await new Promise(requestAnimationFrame);
