@@ -336,38 +336,46 @@ function parameter(str1, num1, str2, num2, num3, str3, searchMode = "normal") {
   const _len1 = currentTable.skill1.length;
   const _len2 = currentTable.skill2.length;
 
-  // 第一スキルが必要なモード:
-  // normal, kokujar2
+  const skill1Text = typeof str1 === "string" ? str1.trim() : "";
+  const skill2Text = typeof str2 === "string" ? str2.trim() : "";
+
+  // normal と kokujar2 は第一スキル必須
   const needSkill1 = (searchMode === "normal" || searchMode === "kokujar2");
 
-  // 第二スキルが必要なモード:
-  // normal(第二スキルありの場合), kokujar1
-  const needSkill2 = (searchMode === "kokujar1") || (searchMode === "normal" && str2 !== null && str2 !== "");
+  // normal(第二スキルあり) と kokujar1 は第二スキル必須
+  const needSkill2 = (searchMode === "kokujar1") || (searchMode === "normal" && skill2Text !== "");
 
   if (needSkill1) {
-    const skill1RawId = skill.indexOf(str1);
+    if (skill1Text === "") {
+      throw new Error("第一スキルを入力してください");
+    }
+
+    const skill1RawId = skill.indexOf(skill1Text);
     if (skill1RawId === -1) {
-      throw new Error(`第一スキルが見つかりません: ${str1}`);
+      throw new Error(`第一スキルが見つかりません: ${skill1Text}`);
     }
 
     _id1 = currentTable.skill1.indexOf(skill1RawId);
     if (_id1 === -1) {
-      throw new Error(`第一スキルは現在のテーブルに存在しません: ${str1}`);
+      throw new Error(`第一スキルは現在のテーブルに存在しません: ${skill1Text}`);
     }
   } else {
-    // 使わないモードではダミー値
-    _id1 = 0;
+    _id1 = null;
   }
 
   if (needSkill2) {
-    const skill2RawId = skill.indexOf(str2);
+    if (skill2Text === "") {
+      throw new Error("第二スキルを入力してください");
+    }
+
+    const skill2RawId = skill.indexOf(skill2Text);
     if (skill2RawId === -1) {
-      throw new Error(`第二スキルが見つかりません: ${str2}`);
+      throw new Error(`第二スキルが見つかりません: ${skill2Text}`);
     }
 
     _id2 = currentTable.skill2.indexOf(skill2RawId);
     if (_id2 === -1) {
-      throw new Error(`第二スキルは現在のテーブルに存在しません: ${str2}`);
+      throw new Error(`第二スキルは現在のテーブルに存在しません: ${skill2Text}`);
     }
   } else {
     _id2 = null;
@@ -533,12 +541,20 @@ async function searchFramesByCharmAsync(param, startFrame, maxFrames, chunkSize 
       } else if (searchMode === "kokujar2") {
         hit = isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot);
       } else {
-        hit =
-          c[0] === targetSkill1 &&
-          c[1] === _sp1 &&
-          c[2] === targetSkill2 &&
-          c[3] === _sp2 &&
-          c[4] === _slot;
+        if (_id2 === null) {
+          hit =
+            c[0] === targetSkill1 &&
+            c[1] === _sp1 &&
+            c[2] === null &&
+            c[4] === _slot;
+        } else {
+          hit =
+            c[0] === targetSkill1 &&
+            c[1] === _sp1 &&
+            c[2] === targetSkill2 &&
+            c[3] === _sp2 &&
+            c[4] === _slot;
+        }
       }
 
       if (hit) {
@@ -651,6 +667,11 @@ button.addEventListener("click", async () => {
   const displayLimit = Number(document.getElementById("displayLimit").value);
   const displayMode = document.querySelector('input[name="displayMode"]:checked').value;
   
+  const rawSkill1Name = document.getElementById("skill1").value;
+  const rawSkill2Name = document.getElementById("skill2").value;
+  const skill1Name = rawSkill1Name.trim();
+  const skill2Name = rawSkill2Name.trim();
+  
   const status = document.getElementById("searchStatus");
   const startTime = performance.now();
   status.textContent = "検索中...";
@@ -680,7 +701,7 @@ button.addEventListener("click", async () => {
 const p = parameter(
   skill1Name,
   Number(skill1Value),
-  skill2Name === "" ? null : skill2Name,
+  skill2Name,
   skill2Value === "" ? 0 : Number(skill2Value),
   Number(slot),
   originType,
