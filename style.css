@@ -76,7 +76,7 @@ button:hover {
   border: 1px solid #ccc;
   border-radius: 8px;
   background: #fff;
-  white-space: pre-wrap;
+  white-space: normal;
   word-break: break-word;
 }
 
