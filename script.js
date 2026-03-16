@@ -567,6 +567,27 @@ async function listAroundFramesAsync(centerFrame, radius, originValue, chunkSize
   return results;
 }
 
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (m) => {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[m];
+  });
+}
+
+function buildDetailUrl(frame, charmKind, originType) {
+  const params = new URLSearchParams({
+    frame: String(frame),
+    table: charmKind,
+    origin: originType
+  });
+  return `detail.html?${params.toString()}`;
+}
+
 const button = document.getElementById("checkButton");
 const result = document.getElementById("result");
 
@@ -669,15 +690,37 @@ button.addEventListener("click", async () => {
       抽選元: ${originType}`;
       return;
     }
+    
+    // const shownResults = (results || []).slice(0, displayLimit);
+    // const preview = shownResults
+    //   .map((r, idx) => `${idx + 1}. frame: ${r.frame} / ${r.watch}`)
+    //   .join("\n");
+    
+    // result.textContent = `ヒット件数: ${results.length}、表示件数: ${shownResults.length}
+    // ${preview}`
 
     const shownResults = (results || []).slice(0, displayLimit);
-    const preview = shownResults
-      .map((r, idx) => `${idx + 1}. frame: ${r.frame} / ${r.watch}`)
-      .join("\n");
-    
-    result.textContent = `ヒット件数: ${results.length}、表示件数: ${shownResults.length}
-    ${preview}`
 
+const previewHtml = shownResults
+  .map((r, idx) => {
+    const url = buildDetailUrl(r.frame, charmKind, originType);
+    return `
+      <div>
+        ${idx + 1}. frame:
+        <a href="${url}">${r.frame}</a>
+        / ${escapeHtml(r.watch)}
+      </div>
+    `;
+  })
+  .join("");
+
+result.innerHTML = `
+  <div>ヒット件数: ${results.length}、表示件数: ${shownResults.length}</div>
+  <div style="margin-top:8px;">
+    ${previewHtml}
+  </div>
+`;
+    
   } catch (error) {
     result.textContent = `エラー: ${error.message}`;
     console.error(error);
