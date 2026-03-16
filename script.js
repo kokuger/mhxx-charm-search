@@ -628,9 +628,9 @@ function formatCharmSummary(c) {
 }
 
 function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot) {
-  const allowedSkill1Ids = kokujarMode1Skill1Candidates
-    .map(name => skill.indexOf(name))
-    .filter(id => id !== -1);
+  const allowedSkill1Ids = getActiveKokujarSkills()
+  .map(name => skill.indexOf(name))
+  .filter(id => id !== -1);
 
   const targetSkill2 = _id2 === null ? null : currentTable.skill2[_id2];
 
@@ -644,9 +644,9 @@ function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot) {
 }
 
 function isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot) {
-  const allowedSkill2Ids = kokujarMode2Skill2Candidates
-    .map(name => skill.indexOf(name))
-    .filter(id => id !== -1);
+  const allowedSkill2Ids = getActiveKokujarSkills()
+  .map(name => skill.indexOf(name))
+  .filter(id => id !== -1);
 
   const targetSkill1 = currentTable.skill1[_id1];
 
@@ -657,6 +657,23 @@ function isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot) {
     c[3] >= _sp2 &&
     c[4] === _slot
   );
+}
+
+function setupKokujarButtons() {
+  const buttons = document.querySelectorAll(".skill-toggle");
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      btn.classList.toggle("active");
+    });
+  });
+}
+setupKokujarButtons();
+
+function getActiveKokujarSkills() {
+  const buttons = document.querySelectorAll(".skill-toggle.active");
+
+  return Array.from(buttons).map(btn => btn.dataset.skill);
 }
 
 const button = document.getElementById("checkButton");
