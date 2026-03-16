@@ -628,7 +628,6 @@ function formatCharmSummary(c) {
 }
 
 function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot) {
-  // 第一スキル候補を raw skill id に変換
   const allowedSkill1Ids = kokujarMode1Skill1Candidates
     .map(name => skill.indexOf(name))
     .filter(id => id !== -1);
@@ -637,7 +636,7 @@ function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot) {
 
   return (
     allowedSkill1Ids.includes(c[0]) &&
-    c[1] === _sp1 &&
+    c[1] >= _sp1 &&
     c[2] === targetSkill2 &&
     c[3] === _sp2 &&
     c[4] === _slot
@@ -645,7 +644,6 @@ function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot) {
 }
 
 function isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot) {
-  // 第二スキル候補を raw skill id に変換
   const allowedSkill2Ids = kokujarMode2Skill2Candidates
     .map(name => skill.indexOf(name))
     .filter(id => id !== -1);
@@ -656,7 +654,7 @@ function isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot) {
     c[0] === targetSkill1 &&
     c[1] === _sp1 &&
     allowedSkill2Ids.includes(c[2]) &&
-    c[3] === _sp2 &&
+    c[3] >= _sp2 &&
     c[4] === _slot
   );
 }
