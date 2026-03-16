@@ -708,6 +708,49 @@ function setupDisplayModeVisibility() {
 }
 setupDisplayModeVisibility();
 
+function setupSearchModeDefaults() {
+  const radios = document.querySelectorAll('input[name="displayMode"]');
+
+  radios.forEach(radio => {
+    radio.addEventListener("change", () => {
+
+      const mode = radio.value;
+
+      const skill1 = document.getElementById("skill1");
+      const skill1Value = document.getElementById("skill1Value");
+      const skill2 = document.getElementById("skill2");
+      const skill2Value = document.getElementById("skill2Value");
+      const slot = document.getElementById("slot");
+
+      // 騎士モード
+      if (mode === "kokujar1") {
+
+        skill1.value = "";
+        skill1Value.value = "4";
+
+        skill2.value = "達人";
+        skill2Value.value = "10";
+
+        slot.value = "3";
+      }
+
+      // 剣士モード
+      if (mode === "kokujar2") {
+
+        skill1.value = "斬味";
+        skill1Value.value = "7";
+
+        skill2.value = "";
+        skill2Value.value = "4";
+
+        slot.value = "3";
+      }
+
+    });
+  });
+}
+setupSearchModeDefaults();
+
 const button = document.getElementById("checkButton");
 const result = document.getElementById("result");
 
