@@ -667,11 +667,6 @@ button.addEventListener("click", async () => {
   const displayLimit = Number(document.getElementById("displayLimit").value);
   const displayMode = document.querySelector('input[name="displayMode"]:checked').value;
   
-  const rawSkill1Name = document.getElementById("skill1").value;
-  const rawSkill2Name = document.getElementById("skill2").value;
-  const skill1Name = rawSkill1Name.trim();
-  const skill2Name = rawSkill2Name.trim();
-  
   const status = document.getElementById("searchStatus");
   const startTime = performance.now();
   status.textContent = "検索中...";
