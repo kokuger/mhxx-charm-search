@@ -634,22 +634,6 @@ function formatCharmSummary(c) {
   return `${skill1Name} ${sp1} / ${skill2Name} ${sp2} / S${c[4]} / RARE${c[7]}`;
 }
 
-// function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot) {
-//   const allowedSkill1Ids = getActiveKokujarSkills()
-//   .map(name => skill.indexOf(name))
-//   .filter(id => id !== -1);
-
-//   const targetSkill2 = _id2 === null ? null : currentTable.skill2[_id2];
-
-//   return (
-//     allowedSkill1Ids.includes(c[0]) &&
-//     c[1] >= _sp1 &&
-//     c[2] === targetSkill2 &&
-//     c[3] === _sp2 &&
-//     c[4] === _slot
-//   );
-// }
-
 function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot, allowedSkillIds) {
   const targetSkill2 = _id2 === null ? null : currentTable.skill2[_id2];
 
@@ -661,22 +645,6 @@ function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot, allowedSkillIds) {
     c[4] === _slot
   );
 }
-
-// function isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot) {
-//   const allowedSkill2Ids = getActiveKokujarSkills()
-//   .map(name => skill.indexOf(name))
-//   .filter(id => id !== -1);
-
-//   const targetSkill1 = currentTable.skill1[_id1];
-
-//   return (
-//     c[0] === targetSkill1 &&
-//     c[1] === _sp1 &&
-//     allowedSkill2Ids.includes(c[2]) &&
-//     c[3] >= _sp2 &&
-//     c[4] === _slot
-//   );
-// }
 
 function isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot, allowedSkillIds) {
   const targetSkill1 = currentTable.skill1[_id1];
@@ -715,6 +683,30 @@ function getActiveKokujarSkillIds() {
     .map(name => skill.indexOf(name))
     .filter(id => id !== -1);
 }
+
+function updateKokujarSkillAreaVisibility() {
+  const selected = document.querySelector('input[name="displayMode"]:checked');
+  const skillArea = document.getElementById("kokujarSkillArea");
+
+  if (!selected || !skillArea) return;
+
+  const isSpecialMode =
+    selected.value === "kokujar1" ||
+    selected.value === "kokujar2";
+
+  skillArea.style.display = isSpecialMode ? "block" : "none";
+}
+
+function setupDisplayModeVisibility() {
+  const modeRadios = document.querySelectorAll('input[name="displayMode"]');
+
+  modeRadios.forEach(radio => {
+    radio.addEventListener("change", updateKokujarSkillAreaVisibility);
+  });
+
+  updateKokujarSkillAreaVisibility();
+}
+setupDisplayModeVisibility();
 
 const button = document.getElementById("checkButton");
 const result = document.getElementById("result");
