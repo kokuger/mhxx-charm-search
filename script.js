@@ -625,36 +625,6 @@ button.addEventListener("click", async () => {
   }
   
   try {
-    if (displayMode === "around") {
-      const originValue = origin.indexOf(originType);
-    
-      const aroundResults = await listAroundFramesAsync(
-        startFrame,
-        20,
-        originValue,
-        2000,
-        (done, total) => {
-          status.textContent = `前後表示を生成中... ${done}/${total}`;
-        }
-      );
-    
-      const preview = aroundResults.map(r => r.line).join("\n");
-    
-      status.textContent = `前後表示完了 (${aroundResults.length}件)`;
-    
-      result.textContent = `中心フレーム: ${startFrame}
-    表示範囲: ${Math.max(0, startFrame - 20)} ～ ${startFrame + 20}
-    現在テーブル: ${charmKindLabels[charmKind]}
-    抽選元: ${originType}
-    
-    ${preview}`;
-
-    clearInterval(timer);
-    const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-    status.textContent = `検索完了 (${elapsed}秒)`;
-      return;
-    }
-    
     const p = parameter(
       skill1Name,
       Number(skill1Value),
