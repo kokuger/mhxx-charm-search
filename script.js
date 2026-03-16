@@ -184,6 +184,31 @@ const charmKindLabels = {
   white: "なぞのお守り"
 };
 
+// ========================================
+// こくじゃー特殊検索モード用の許可スキル
+// あとで増やしたい場合はこの配列に追加してください
+// ========================================
+
+// モード1:
+// 第一スキルとしてヒットを許可する候補
+const kokujarMode1Skill1Candidates = [
+  "斬味",
+  "痛撃",
+  "連撃"
+  // 例: "匠　",
+  // 例: "達人"
+];
+
+// モード2:
+// 第二スキルとしてヒットを許可する候補
+const kokujarMode2Skill2Candidates = [
+  "達人",
+  "攻撃",
+  "会心"
+  // 例: "匠　",
+  // 例: "連撃"
+];
+
 function setupSkillDatalist() {
   const skillList = document.getElementById("skillList");
   if (!skillList) return;
@@ -299,23 +324,42 @@ function rare(slotNum, fill) {
   }
 }
 
-function parameter(str1, num1, str2, num2, num3, str3) {
-  const skill1RawId = skill.indexOf(str1);
-  if (skill1RawId === -1) {
-    throw new Error(`第一スキルが見つかりません: ${str1}`);
-  }
-
-  const _id1 = currentTable.skill1.indexOf(skill1RawId);
-  if (_id1 === -1) {
-    throw new Error(`第一スキルは現在のテーブルに存在しません: ${str1}`);
-  }
+function parameter(str1, num1, str2, num2, num3, str3, searchMode = "normal") {
+  let _id1 = null;
+  let _id2 = null;
 
   const _sp1 = Number(num1);
+  const _sp2 = Number(num2);
+  const _slot = Number(num3);
+  const _origin = origin.indexOf(str3);
 
-  let _id2 = null;
-  let _sp2 = 0;
+  const _len1 = currentTable.skill1.length;
+  const _len2 = currentTable.skill2.length;
 
-  if (str2 !== null && str2 !== "") {
+  // 第一スキルが必要なモード:
+  // normal, kokujar2
+  const needSkill1 = (searchMode === "normal" || searchMode === "kokujar2");
+
+  // 第二スキルが必要なモード:
+  // normal(第二スキルありの場合), kokujar1
+  const needSkill2 = (searchMode === "kokujar1") || (searchMode === "normal" && str2 !== null && str2 !== "");
+
+  if (needSkill1) {
+    const skill1RawId = skill.indexOf(str1);
+    if (skill1RawId === -1) {
+      throw new Error(`第一スキルが見つかりません: ${str1}`);
+    }
+
+    _id1 = currentTable.skill1.indexOf(skill1RawId);
+    if (_id1 === -1) {
+      throw new Error(`第一スキルは現在のテーブルに存在しません: ${str1}`);
+    }
+  } else {
+    // 使わないモードではダミー値
+    _id1 = 0;
+  }
+
+  if (needSkill2) {
     const skill2RawId = skill.indexOf(str2);
     if (skill2RawId === -1) {
       throw new Error(`第二スキルが見つかりません: ${str2}`);
@@ -325,14 +369,9 @@ function parameter(str1, num1, str2, num2, num3, str3) {
     if (_id2 === -1) {
       throw new Error(`第二スキルは現在のテーブルに存在しません: ${str2}`);
     }
-
-    _sp2 = Number(num2);
+  } else {
+    _id2 = null;
   }
-
-  const _slot = Number(num3);
-  const _origin = origin.indexOf(str3);
-  const _len1 = currentTable.skill1.length;
-  const _len2 = currentTable.skill2.length;
 
   return [_id1, _sp1, _id2, _sp2, _slot, _origin, _len1, _len2];
 }
@@ -400,45 +439,57 @@ function getCharm(_origin) {
   return c;
 }
 
-function searchOne(_id1, _sp1, _id2, _sp2, _slot, _origin, _len1, _len2) {
+function searchOne(_id1, _sp1, _id2, _sp2, _slot, _origin, _len1, _len2, searchMode = "normal") {
   roll();
   const c = getCharm(_origin);
 
   const targetSkill1 = currentTable.skill1[_id1];
   const targetSkill2 = _id2 === null ? null : currentTable.skill2[_id2];
 
-  // 第二スキルなし検索
-  if (_id2 === null) {
-    if (
-      c[0] === targetSkill1 &&
-      c[1] === _sp1 &&
-      c[2] === null &&
-      c[4] === _slot
-    ) {
-      return {
-        found: true,
-        frame: f - 7,
-        watch: watch(f - 7),
-        charm: c
-      };
-    }
+  let hit = false;
+
+  if (searchMode === "kokujar1") {
+    hit = isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot);
+  } else if (searchMode === "kokujar2") {
+    hit = isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot);
   } else {
-    // 第二スキルあり検索
-    if (
-      c[0] === targetSkill1 &&
-      c[1] === _sp1 &&
-      c[2] === targetSkill2 &&
-      c[3] === _sp2 &&
-      c[4] === _slot
-    ) {
-      return {
-        found: true,
-        frame: f - 7,
-        watch: watch(f - 7),
-        charm: c
-      };
+    // 通常検索
+    if (_id2 === null) {
+      // 第二スキルなし検索
+      hit = (
+        c[0] === targetSkill1 &&
+        c[1] === _sp1 &&
+        c[2] === null &&
+        c[4] === _slot
+      );
+    } else {
+      // 第二スキルあり検索
+      hit = (
+        c[0] === targetSkill1 &&
+        c[1] === _sp1 &&
+        c[2] === targetSkill2 &&
+        c[3] === _sp2 &&
+        c[4] === _slot
+      );
     }
   }
+
+  if (hit) {
+    return {
+      found: true,
+      frame: f - 7,
+      watch: watch(f - 7),
+      charm: c
+    };
+  }
+
+  return {
+    found: false,
+    frame: null,
+    watch: null,
+    charm: null
+  };
+}
 
   return {
     found: false,
@@ -462,7 +513,7 @@ function searchFrames(param, maxFrames) {
   return results;
 }
 
-async function searchFramesByCharmAsync(param, startFrame, maxFrames, chunkSize = 5000, onProgress = null) {
+async function searchFramesByCharmAsync(param, startFrame, maxFrames, chunkSize = 5000, onProgress = null, searchMode = "normal") {
   init();
 
   const results = [];
@@ -483,12 +534,20 @@ async function searchFramesByCharmAsync(param, startFrame, maxFrames, chunkSize 
       roll();
       const c = getCharm(_origin);
 
-      const hit =
-        c[0] === targetSkill1 &&
-        c[1] === _sp1 &&
-        c[2] === targetSkill2 &&
-        c[3] === _sp2 &&
-        c[4] === _slot;
+      let hit = false;
+
+      if (searchMode === "kokujar1") {
+        hit = isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot);
+      } else if (searchMode === "kokujar2") {
+        hit = isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot);
+      } else {
+        hit =
+          c[0] === targetSkill1 &&
+          c[1] === _sp1 &&
+          c[2] === targetSkill2 &&
+          c[3] === _sp2 &&
+          c[4] === _slot;
+      }
 
       if (hit) {
         results.push({
@@ -550,6 +609,40 @@ function buildDetailUrl(frame, charmKind, originType) {
   return `detail.html?${params.toString()}`;
 }
 
+function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot) {
+  // 第一スキル候補を raw skill id に変換
+  const allowedSkill1Ids = kokujarMode1Skill1Candidates
+    .map(name => skill.indexOf(name))
+    .filter(id => id !== -1);
+
+  const targetSkill2 = _id2 === null ? null : currentTable.skill2[_id2];
+
+  return (
+    allowedSkill1Ids.includes(c[0]) &&
+    c[1] === _sp1 &&
+    c[2] === targetSkill2 &&
+    c[3] === _sp2 &&
+    c[4] === _slot
+  );
+}
+
+function isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot) {
+  // 第二スキル候補を raw skill id に変換
+  const allowedSkill2Ids = kokujarMode2Skill2Candidates
+    .map(name => skill.indexOf(name))
+    .filter(id => id !== -1);
+
+  const targetSkill1 = currentTable.skill1[_id1];
+
+  return (
+    c[0] === targetSkill1 &&
+    c[1] === _sp1 &&
+    allowedSkill2Ids.includes(c[2]) &&
+    c[3] === _sp2 &&
+    c[4] === _slot
+  );
+}
+
 const button = document.getElementById("checkButton");
 const result = document.getElementById("result");
 
@@ -587,24 +680,31 @@ button.addEventListener("click", async () => {
   }
   
   try {
-    const p = parameter(
-      skill1Name,
-      Number(skill1Value),
-      skill2Name === "" ? null : skill2Name,
-      skill2Value === "" ? 0 : Number(skill2Value),
-      Number(slot),
-      originType
-    );
+    const searchMode =
+  displayMode === "kokujar1" ? "kokujar1" :
+  displayMode === "kokujar2" ? "kokujar2" :
+  "normal";
+
+const p = parameter(
+  skill1Name,
+  Number(skill1Value),
+  skill2Name === "" ? null : skill2Name,
+  skill2Value === "" ? 0 : Number(skill2Value),
+  Number(slot),
+  originType,
+  searchMode
+);
     
     const results = await searchFramesByCharmAsync(
-      p,
-      startFrame,
-      maxFrames,
-      100000,
-      (done, total) => {
-        status.textContent = `検索中... ${done}/${total}`;
-      }
-    );
+  p,
+  startFrame,
+  maxFrames,
+  100000,
+  (done, total) => {
+    status.textContent = `検索中... ${done}/${total}`;
+  },
+  searchMode
+);
     
     clearInterval(timer);
     const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
