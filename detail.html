@@ -403,25 +403,27 @@
       return c;
     }
 
-    function formatCharmLine(relativeIndex, c) {
-      const left = String(relativeIndex).padStart(4, " ");
+    function formatCharmLine(frame, centerFrame, c) {
+  const frameText = String(frame).padStart(6, " ");
 
-      const skill1Name = skill[c[0]];
-      const sp1 = String(c[1]).padStart(2, " ");
+  const skill1Name = skill[c[0]];
+  const sp1 = String(c[1]).padStart(2, " ");
 
-      let skill2Name;
-      let sp2;
+  let skill2Name;
+  let sp2;
 
-      if (c[2] === null) {
-        skill2Name = "◯◯";
-        sp2 = "00";
-      } else {
-        skill2Name = skill[c[2]];
-        sp2 = String(c[3]).padStart(2, "0");
-      }
+  if (c[2] === null) {
+    skill2Name = "◯◯";
+    sp2 = "00";
+  } else {
+    skill2Name = skill[c[2]];
+    sp2 = String(c[3]).padStart(2, "0");
+  }
 
-      return `${left}  ${skill1Name}  ${sp1} ${skill2Name}  ${sp2} S${c[4]} RARE${c[7]}`;
-    }
+  const centerMark = frame === centerFrame ? "  ← 中心" : "";
+
+  return `${frameText}  ${skill1Name}  ${sp1} ${skill2Name}  ${sp2} S${c[4]} RARE${c[7]}${centerMark}`;
+}
 
     async function listAroundFramesAsync(centerFrame, radius, originValue, chunkSize = 2000, onProgress = null) {
   init();
