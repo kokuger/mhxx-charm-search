@@ -617,6 +617,16 @@ function buildDetailUrl(frame, charmKind, originType) {
   return `detail.html?${params.toString()}`;
 }
 
+function formatCharmSummary(c) {
+  const skill1Name = skill[c[0]];
+  const sp1 = c[1];
+
+  const skill2Name = c[2] === null ? "なし" : skill[c[2]];
+  const sp2 = c[2] === null ? "-" : c[3];
+
+  return `${skill1Name} ${sp1} / ${skill2Name} ${sp2} / S${c[4]} / RARE${c[7]}`;
+}
+
 function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot) {
   // 第一スキル候補を raw skill id に変換
   const allowedSkill1Ids = kokujarMode1Skill1Candidates
@@ -740,15 +750,25 @@ const p = parameter(
     // ${preview}`
 
     const shownResults = (results || []).slice(0, displayLimit);
+const isSpecialMode = (searchMode === "kokujar1" || searchMode === "kokujar2");
 
 const previewHtml = shownResults
   .map((r, idx) => {
     const url = buildDetailUrl(r.frame, charmKind, originType);
+
+    let detailHtml = "";
+    if (isSpecialMode) {
+      detailHtml = `<div style="margin-left:1.5em; color:#444;">${escapeHtml(formatCharmSummary(r.charm))}</div>`;
+    }
+
     return `
-      <div>
-        ${idx + 1}. frame:
-        <a href="${url}">${r.frame}</a>
-        / ${escapeHtml(r.watch)}
+      <div style="margin-bottom:10px;">
+        <div>
+          ${idx + 1}. frame:
+          <a href="${url}">${r.frame}</a>
+          / ${escapeHtml(r.watch)}
+        </div>
+        ${detailHtml}
       </div>
     `;
   })
