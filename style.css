@@ -190,3 +190,7 @@ button:hover {
 .skill-toggle.active:hover {
   background: #222;
 }
+
+#kokujarSkillArea {
+  display: none;
+}
