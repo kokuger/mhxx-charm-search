@@ -424,42 +424,45 @@
     }
 
     async function listAroundFramesAsync(centerFrame, radius, originValue, chunkSize = 2000, onProgress = null) {
-      init();
+  init();
 
-      const results = [];
-      const startFrame = Math.max(0, centerFrame - radius);
-      const totalCount = radius * 2 + 1;
+  const results = [];
+  const startFrame = Math.max(0, centerFrame - radius);
+  const endFrame = centerFrame + radius;
+  const totalCount = endFrame - startFrame + 1;
 
-      for (let i = 0; i < startFrame; i++) {
-        roll();
-      }
+  // 開始フレーム直前まで進める
+  for (let i = 0; i < startFrame; i++) {
+    roll();
+  }
 
-      for (let start = 0; start < totalCount; start += chunkSize) {
-        const end = Math.min(start + chunkSize, totalCount);
+  for (let start = 0; start < totalCount; start += chunkSize) {
+    const end = Math.min(start + chunkSize, totalCount);
 
-        for (let i = start; i < end; i++) {
-          const c = getCharm(originValue);
+    for (let i = start; i < end; i++) {
+      // 検索時と同じ順序にする
+      roll();
+      const c = getCharm(originValue);
 
-          results.push({
-            relativeIndex: startFrame + i - centerFrame,
-            frame: f - 7,
-            watch: watch(f - 7),
-            charm: c,
-            line: formatCharmLine(startFrame + i - centerFrame, c)
-          });
+      const frame = f - 7;
 
-          roll();
-        }
-
-        if (onProgress) {
-          onProgress(end, totalCount);
-        }
-
-        await new Promise(requestAnimationFrame);
-      }
-
-      return results;
+      results.push({
+        frame,
+        watch: watch(frame),
+        charm: c,
+        line: formatCharmLine(frame, centerFrame, c)
+      });
     }
+
+    if (onProgress) {
+      onProgress(end, totalCount);
+    }
+
+    await new Promise(requestAnimationFrame);
+  }
+
+  return results;
+}
 
     function escapeHtml(str) {
       return String(str).replace(/[&<>"']/g, (m) => {
