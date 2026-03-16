@@ -513,16 +513,23 @@ function searchFrames(param, maxFrames) {
   return results;
 }
 
-async function searchFramesByCharmAsync(param, startFrame, maxFrames, chunkSize = 5000, onProgress = null, searchMode = "normal") {
+async function searchFramesByCharmAsync(
+  param,
+  startFrame,
+  maxFrames,
+  chunkSize = 5000,
+  onProgress = null,
+  searchMode = "normal",
+  allowedSkillIds = []
+) {
   init();
 
   const results = [];
   const [_id1, _sp1, _id2, _sp2, _slot, _origin] = param;
 
-  const targetSkill1 = currentTable.skill1[_id1];
+  const targetSkill1 = _id1 === null ? null : currentTable.skill1[_id1];
   const targetSkill2 = _id2 === null ? null : currentTable.skill2[_id2];
 
-  // 開始位置まで進める
   for (let i = 0; i < startFrame; i++) {
     roll();
   }
@@ -537,9 +544,9 @@ async function searchFramesByCharmAsync(param, startFrame, maxFrames, chunkSize 
       let hit = false;
 
       if (searchMode === "kokujar1") {
-        hit = isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot);
+        hit = isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot, allowedSkillIds);
       } else if (searchMode === "kokujar2") {
-        hit = isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot);
+        hit = isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot, allowedSkillIds);
       } else {
         if (_id2 === null) {
           hit =
@@ -627,15 +634,27 @@ function formatCharmSummary(c) {
   return `${skill1Name} ${sp1} / ${skill2Name} ${sp2} / S${c[4]} / RARE${c[7]}`;
 }
 
-function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot) {
-  const allowedSkill1Ids = getActiveKokujarSkills()
-  .map(name => skill.indexOf(name))
-  .filter(id => id !== -1);
+// function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot) {
+//   const allowedSkill1Ids = getActiveKokujarSkills()
+//   .map(name => skill.indexOf(name))
+//   .filter(id => id !== -1);
 
+//   const targetSkill2 = _id2 === null ? null : currentTable.skill2[_id2];
+
+//   return (
+//     allowedSkill1Ids.includes(c[0]) &&
+//     c[1] >= _sp1 &&
+//     c[2] === targetSkill2 &&
+//     c[3] === _sp2 &&
+//     c[4] === _slot
+//   );
+// }
+
+function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot, allowedSkillIds) {
   const targetSkill2 = _id2 === null ? null : currentTable.skill2[_id2];
 
   return (
-    allowedSkill1Ids.includes(c[0]) &&
+    allowedSkillIds.includes(c[0]) &&
     c[1] >= _sp1 &&
     c[2] === targetSkill2 &&
     c[3] === _sp2 &&
@@ -643,22 +662,33 @@ function isKokujarMode1Hit(c, _sp1, _id2, _sp2, _slot) {
   );
 }
 
-function isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot) {
-  const allowedSkill2Ids = getActiveKokujarSkills()
-  .map(name => skill.indexOf(name))
-  .filter(id => id !== -1);
+// function isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot) {
+//   const allowedSkill2Ids = getActiveKokujarSkills()
+//   .map(name => skill.indexOf(name))
+//   .filter(id => id !== -1);
 
+//   const targetSkill1 = currentTable.skill1[_id1];
+
+//   return (
+//     c[0] === targetSkill1 &&
+//     c[1] === _sp1 &&
+//     allowedSkill2Ids.includes(c[2]) &&
+//     c[3] >= _sp2 &&
+//     c[4] === _slot
+//   );
+// }
+
+function isKokujarMode2Hit(c, _id1, _sp1, _sp2, _slot, allowedSkillIds) {
   const targetSkill1 = currentTable.skill1[_id1];
 
   return (
     c[0] === targetSkill1 &&
     c[1] === _sp1 &&
-    allowedSkill2Ids.includes(c[2]) &&
+    allowedSkillIds.includes(c[2]) &&
     c[3] >= _sp2 &&
     c[4] === _slot
   );
 }
-
 function setupKokujarButtons() {
   const buttons = document.querySelectorAll(".skill-toggle");
 
@@ -668,12 +698,22 @@ function setupKokujarButtons() {
     });
   });
 }
+
 setupKokujarButtons();
 
 function getActiveKokujarSkills() {
   const buttons = document.querySelectorAll(".skill-toggle.active");
 
   return Array.from(buttons).map(btn => btn.dataset.skill);
+}
+
+function getActiveKokujarSkillIds() {
+  const buttons = document.querySelectorAll(".skill-toggle.active");
+
+  return Array.from(buttons)
+    .map(btn => btn.dataset.skill)
+    .map(name => skill.indexOf(name))
+    .filter(id => id !== -1);
 }
 
 const button = document.getElementById("checkButton");
@@ -717,7 +757,7 @@ button.addEventListener("click", async () => {
   displayMode === "kokujar1" ? "kokujar1" :
   displayMode === "kokujar2" ? "kokujar2" :
   "normal";
-
+    
 const p = parameter(
   skill1Name,
   Number(skill1Value),
@@ -728,6 +768,11 @@ const p = parameter(
   searchMode
 );
     
+const allowedSkillIds =
+  (searchMode === "kokujar1" || searchMode === "kokujar2")
+    ? getActiveKokujarSkillIds()
+    : [];
+    
     const results = await searchFramesByCharmAsync(
   p,
   startFrame,
@@ -736,7 +781,8 @@ const p = parameter(
   (done, total) => {
     status.textContent = `検索中... ${done}/${total}`;
   },
-  searchMode
+  searchMode,
+  allowedSkillIds
 );
     
     clearInterval(timer);
