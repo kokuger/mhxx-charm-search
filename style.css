@@ -160,3 +160,33 @@ button:hover {
   color: #fff;
   border-color: #222;
 }
+
+.skill-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-toggle {
+  width: auto;
+  padding: 10px 16px;
+  border: 1px solid #bbb;
+  border-radius: 999px;
+  background: #eee;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.skill-toggle.active {
+  background: #222;
+  color: #fff;
+  border-color: #222;
+}
+
+.skill-toggle:hover {
+  background: #f0f0f0;
+}
+
+.skill-toggle.active:hover {
+  background: #222;
+}
