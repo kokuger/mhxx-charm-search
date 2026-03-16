@@ -491,14 +491,6 @@ function searchOne(_id1, _sp1, _id2, _sp2, _slot, _origin, _len1, _len2, searchM
   };
 }
 
-  return {
-    found: false,
-    frame: null,
-    watch: null,
-    charm: null
-  };
-}
-
 function searchFrames(param, maxFrames) {
   init();
   const results = [];
