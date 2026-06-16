@@ -31,6 +31,18 @@ function getCharmAtFrame(frame, originIndex) {
   return getCharm(originIndex);
 }
 
+function moveRng(offset) {
+  if (offset > 0) {
+    for (let i = 0; i < offset; i++) {
+      roll();
+    }
+  } else if (offset < 0) {
+    for (let i = 0; i < Math.abs(offset); i++) {
+      descend();
+    }
+  }
+}
+
 function isNormalCharmHit(c, param) {
   const [_id1, _sp1, _id2, _sp2, _slot] = param;
 
@@ -76,7 +88,9 @@ async function searchMultiCharmsAsync(charm1Param, charm2Param, maxFrames, origi
         const checkFrame = firstFrame + offset;
         if (checkFrame < 0) continue;
 
-        const c2 = getCharmAtFrame(checkFrame, originIndex);
+        restoreRngState(savedState);
+        moveRng(offset);
+        const c2 = getCharm(originIndex);
 
         if (isNormalCharmHit(c2, charm2Param)) {
           foundList.push({
