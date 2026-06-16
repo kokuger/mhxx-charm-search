@@ -754,7 +754,8 @@ setupSearchModeDefaults();
 const button = document.getElementById("checkButton");
 const result = document.getElementById("result");
 
-button.addEventListener("click", async () => {
+if (button) {
+  button.addEventListener("click", async () => {
   const skill1Name = document.getElementById("skill1").value.trim();
   const skill1Value = document.getElementById("skill1Value").value;
   const skill2Name = document.getElementById("skill2").value.trim();
@@ -881,4 +882,5 @@ result.innerHTML = `
     result.textContent = `エラー: ${error.message}`;
     console.error(error);
   }
-});
+  });
+}
