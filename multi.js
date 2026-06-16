@@ -1,8 +1,8 @@
 const multiButton = document.getElementById("multiCheckButton");
-const result = document.getElementById("result");
+const multiResult = document.getElementById("result");
 
 if (multiButton) {
   multiButton.addEventListener("click", () => {
-    result.textContent = "仮の検索結果";
+    multiResult.textContent = "仮の検索結果";
   });
 }
