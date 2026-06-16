@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MHXX 複数護石照合検索</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>MHXX 複数護石照合検索</h1>
+
+    <p>
+      連続して出た複数のお守りを入力して、候補フレームを絞り込むためのページです。
+      まずはUIのみです。
+    </p>
+
+    <section class="search-box">
+      <h2>検索条件</h2>
+
+      <label>
+        検索開始フレーム
+        <input type="number" id="startFrame" value="0">
+      </label>
+
+      <label>
+        検索フレーム数
+        <input type="number" id="searchCount" value="100000">
+      </label>
+
+      <label>
+        表示件数
+        <input type="number" id="limitCount" value="100">
+      </label>
+    </section>
+
+    <section class="charm-list">
+      <h2>護石情報</h2>
+
+      <div class="charm-card">
+        <h3>護石 1</h3>
+
+        <label>
+          第一スキル
+          <select>
+            <option value="">選択してください</option>
+            <option value="痛撃">痛撃</option>
+            <option value="連撃">連撃</option>
+            <option value="達人">達人</option>
+            <option value="斬れ味">斬れ味</option>
+          </select>
+        </label>
+
+        <label>
+          第一スキル値
+          <input type="number" value="0">
+        </label>
+
+        <label>
+          第二スキル
+          <select>
+            <option value="">なし</option>
+            <option value="痛撃">痛撃</option>
+            <option value="連撃">連撃</option>
+            <option value="達人">達人</option>
+            <option value="斬れ味">斬れ味</option>
+          </select>
+        </label>
+
+        <label>
+          第二スキル値
+          <input type="number" value="0">
+        </label>
+
+        <label>
+          スロット数
+          <select>
+            <option value="0">スロ0</option>
+            <option value="1">スロ1</option>
+            <option value="2">スロ2</option>
+            <option value="3">スロ3</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="charm-card">
+        <h3>護石 2</h3>
+
+        <label>
+          第一スキル
+          <select>
+            <option value="">選択してください</option>
+            <option value="痛撃">痛撃</option>
+            <option value="連撃">連撃</option>
+            <option value="達人">達人</option>
+            <option value="斬れ味">斬れ味</option>
+          </select>
+        </label>
+
+        <label>
+          第一スキル値
+          <input type="number" value="0">
+        </label>
+
+        <label>
+          第二スキル
+          <select>
+            <option value="">なし</option>
+            <option value="痛撃">痛撃</option>
+            <option value="連撃">連撃</option>
+            <option value="達人">達人</option>
+            <option value="斬れ味">斬れ味</option>
+          </select>
+        </label>
+
+        <label>
+          第二スキル値
+          <input type="number" value="0">
+        </label>
+
+        <label>
+          スロット数
+          <select>
+            <option value="0">スロ0</option>
+            <option value="1">スロ1</option>
+            <option value="2">スロ2</option>
+            <option value="3">スロ3</option>
+          </select>
+        </label>
+      </div>
+
+      <button type="button" id="addCharmButton">＋ 護石を追加</button>
+    </section>
+
+    <section class="button-area">
+      <button type="button" id="searchButton">複数護石で検索</button>
+    </section>
+
+    <section class="result-area">
+      <h2>検索結果</h2>
+      <div id="result">
+        ここに検索結果を表示します。
+      </div>
+    </section>
+
+    <p>
+      <a href="index.html">通常検索ページへ戻る</a>
+    </p>
+  </main>
+</body>
+</html>
