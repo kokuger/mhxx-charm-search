@@ -89,7 +89,7 @@ if (multiButton) {
         return;
       }
 
-      let found = null;
+      const foundList = [];
 
       for (const first of firstResults) {
         for (let offset = -10; offset <= 10; offset++) {
@@ -101,48 +101,59 @@ if (multiButton) {
           const c2 = getCharmAtFrame(checkFrame, originIndex);
 
           if (isNormalCharmHit(c2, charm2Param)) {
-            found = {
+            foundList.push({
               first,
               second: {
                 frame: checkFrame,
                 offset,
                 charm: c2
               }
-            };
-            break;
+            });
+
+            if (foundList.length >= 5) break;
           }
         }
 
-        if (found) break;
+        if (foundList.length >= 5) break;
       }
 
       status.textContent = "検索完了";
 
-      if (!found) {
+      if (foundList.length === 0) {
         multiResult.textContent =
           `第一護石は ${firstResults.length} 件見つかりましたが、前後10フレーム以内に第二護石は見つかりませんでした。`;
         return;
       }
 
+      const resultHtml = foundList.map((found, idx) => {
+        return `
+          <div style="margin-top:16px; padding-top:12px; border-top:1px solid #ccc;">
+            <div><strong>${idx + 1}件目</strong></div>
+
+            <div style="margin-top:8px;">
+              <strong>第一護石</strong><br>
+              frame:
+              <a href="${buildDetailUrl(found.first.frame, "blue", originType)}">${found.first.frame}</a>
+              / ${escapeHtml(found.first.watch)}<br>
+              ${escapeHtml(formatCharmSummary(found.first.charm))}
+            </div>
+
+            <div style="margin-top:8px;">
+              <strong>第二護石</strong><br>
+              frame:
+              <a href="${buildDetailUrl(found.second.frame, "blue", originType)}">${found.second.frame}</a>
+              / ${escapeHtml(watch(found.second.frame))}<br>
+              第一護石から ${found.second.offset > 0 ? "+" : ""}${found.second.offset} フレーム<br>
+              ${escapeHtml(formatCharmSummary(found.second.charm))}
+            </div>
+          </div>
+        `;
+      }).join("");
+
       multiResult.innerHTML = `
-        <div>複数護石検索ヒット</div>
-
-        <div style="margin-top:12px;">
-          <strong>第一護石</strong><br>
-          frame:
-          <a href="${buildDetailUrl(found.first.frame, "blue", originType)}">${found.first.frame}</a>
-          / ${escapeHtml(found.first.watch)}<br>
-          ${escapeHtml(formatCharmSummary(found.first.charm))}
-        </div>
-
-        <div style="margin-top:12px;">
-          <strong>第二護石</strong><br>
-          frame:
-          <a href="${buildDetailUrl(found.second.frame, "blue", originType)}">${found.second.frame}</a>
-          / ${escapeHtml(watch(found.second.frame))}<br>
-          第一護石から ${found.second.offset > 0 ? "+" : ""}${found.second.offset} フレーム<br>
-          ${escapeHtml(formatCharmSummary(found.second.charm))}
-        </div>
+        <div>複数護石検索ヒット: ${foundList.length}件表示</div>
+        <div>第一護石ヒット件数: ${firstResults.length}件</div>
+        ${resultHtml}
       `;
     } catch (error) {
       status.textContent = "";
