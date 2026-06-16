@@ -194,3 +194,22 @@ button:hover {
 #kokujarSkillArea {
   display: none;
 }
+
+.charm-block {
+  margin-top: 28px;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.charm-block h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.charm-block .row {
+  margin-bottom: 14px;
+}
