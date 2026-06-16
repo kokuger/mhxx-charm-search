@@ -72,6 +72,7 @@ async function searchMultiCharmsAsync(charm1Param, charm2Param, maxFrames, origi
 
   const foundList = [];
   const chunkSize = 100000;
+  let firstHitCount = 0;
 
   for (let i = 0; i < maxFrames; i++) {
     roll();
@@ -80,6 +81,7 @@ async function searchMultiCharmsAsync(charm1Param, charm2Param, maxFrames, origi
     const firstFrame = f - 7;
 
     if (isNormalCharmHit(c1, charm1Param)) {
+      firstHitCount++;
       const savedState = cloneRngState();
 
       for (let offset = -10; offset <= 10; offset++) {
@@ -130,7 +132,10 @@ async function searchMultiCharmsAsync(charm1Param, charm2Param, maxFrames, origi
     onProgress(Math.min(maxFrames, maxFrames), maxFrames);
   }
 
-  return foundList;
+  return {
+    foundList,
+    firstHitCount
+  };
 }
 
 if (multiButton) {
@@ -171,7 +176,7 @@ if (multiButton) {
 
       const startTime = performance.now();
 
-      const foundList = await searchMultiCharmsAsync(
+      const searchResult = await searchMultiCharmsAsync(
         charm1Param,
         charm2Param,
         maxFrames,
@@ -181,6 +186,9 @@ if (multiButton) {
           status.textContent = `検索中... ${done}/${total} (${elapsed}秒)`;
         }
       );
+      
+      const foundList = searchResult.foundList;
+      const firstHitCount = searchResult.firstHitCount;
 
       const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
       status.textContent = `検索完了 (${elapsed}秒)`;
@@ -217,8 +225,9 @@ if (multiButton) {
       }).join("");
 
       multiResult.innerHTML = `
-        <div>複数護石検索ヒット: ${foundList.length}件表示</div>
-        ${resultHtml}
+      <div>複数護石検索ヒット: ${foundList.length}件表示</div>
+        <div>第一護石ヒット件数: ${firstHitCount}件</div>
+      ${resultHtml}
       `;
     } catch (error) {
       status.textContent = "";
