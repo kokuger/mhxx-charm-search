@@ -225,7 +225,7 @@ if (multiButton) {
       }).join("");
 
       multiResult.innerHTML = `
-      <div>複数護石検索ヒット: ${foundList.length}件表示</div>
+      <div>複数護石検索ヒット: ${foundList.length}件表示(2件以上になることは未想定、あったら報告ほしい)</div>
         <div>第一護石ヒット件数: ${firstHitCount}件</div>
       ${resultHtml}
       `;
