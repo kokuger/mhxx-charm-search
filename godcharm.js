@@ -32,11 +32,24 @@ function getTargetSkillConditions() {
 function isGodCharmHit(c, conditions, slotValue) {
   if (c[4] !== slotValue) return false;
 
+  // 第二スキルなしは除外
+  if (c[2] === null) return false;
+
+  const targetSkillIds = conditions.map(condition => condition.skillId);
+
+  const skill1Id = c[0];
+  const skill2Id = c[2];
+
+  // 第一・第二スキルが両方とも指定8スキル内でなければ除外
+  if (!targetSkillIds.includes(skill1Id)) return false;
+  if (!targetSkillIds.includes(skill2Id)) return false;
+
   const charmSkills = [
-    { skillId: c[0], value: c[1] },
-    { skillId: c[2], value: c[3] }
+    { skillId: skill1Id, value: c[1] },
+    { skillId: skill2Id, value: c[3] }
   ];
 
+  // どちらかのスキルが入力値以上ならヒット
   return conditions.some(condition => {
     return charmSkills.some(charmSkill => {
       return (
