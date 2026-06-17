@@ -350,7 +350,7 @@ function parameter(str1, num1, str2, num2, num3, str3, searchMode = "normal") {
       throw new Error("第一スキルを入力してください");
     }
 
-    const skill1RawId = skill.indexOf(skill1Text);
+    const skill1RawId = skill.findIndex(s => s.trim() === skill1Text);
     if (skill1RawId === -1) {
       throw new Error(`第一スキルが見つかりません: ${skill1Text}`);
     }
@@ -368,7 +368,7 @@ function parameter(str1, num1, str2, num2, num3, str3, searchMode = "normal") {
       throw new Error("第二スキルを入力してください");
     }
 
-    const skill2RawId = skill.indexOf(skill2Text);
+    const skill2RawId = skill.findIndex(s => s.trim() === skill2Text);
     if (skill2RawId === -1) {
       throw new Error(`第二スキルが見つかりません: ${skill2Text}`);
     }
