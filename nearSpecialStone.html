@@ -47,13 +47,14 @@
     <h2>最低必要スキル値と検索から除外する値を入力します</h2>
 
     <div class="row">
-      <label for="sharpnessValue">斬味</label>
       <div class="form-group">
+      <label for="sharpnessValue">斬味</label>
         <input type="number" id="sharpnessValue" value="4">
       </div>
 
       <div class="form-group">
-        <input type="number" id="excludeSharpnessValue" value="1">
+        <label for="excludeWeaknessValue">の除外値</label>
+        <input type="number" id="excludeSharpnessValue" value="3">
       </div>
     
       <div class="form-group">
@@ -61,8 +62,8 @@
         <input type="number" id="weaknessValue" value="4">
       </div>
       <div class="form-group">
-        <label for="excludeWeaknessValue">除外</label>
-        <input type="number" id="excludeWeaknessValue" value="0">
+        <label for="excludeWeaknessValue">の除外値</label>
+        <input type="number" id="excludeWeaknessValue" value="2">
       </div>
     </div>
     
@@ -73,8 +74,18 @@
       </div>
     
       <div class="form-group">
+        <label for="excludeChainValue">の除外値</label>
+        <input type="number" id="excludeChainValue" value="2">
+      </div>
+      
+      <div class="form-group">
         <label for="criticalValue">会心</label>
         <input type="number" id="criticalValue" value="4">
+      </div>
+
+      <div class="form-group">
+        <label for="excludeCriticalValue">の除外値</label>
+        <input type="number" id="excludeCriticalValue" value="2">
       </div>
     </div>
     
@@ -83,10 +94,20 @@
         <label for="spiritValue">闘魂</label>
         <input type="number" id="spiritValue" value="4">
       </div>
-    
+      
+      <div class="form-group">
+        <label for="excludeSpiritValue">の除外値</label>
+        <input type="number" id="excludeSpiritValue" value="2">
+      </div>
+      
       <div class="form-group">
         <label for="expertValue">達人</label>
         <input type="number" id="expertValue" value="8">
+      </div>
+
+      <div class="form-group">
+        <label for="excludeExpertValue">達人の除外値</label>
+        <input type="number" id="excludeExpertValue" value="4">
       </div>
     </div>
     
@@ -95,10 +116,20 @@
         <label for="attackValue">攻撃</label>
         <input type="number" id="attackValue" value="8">
       </div>
-    
+
+      <div class="form-group">
+        <label for="excludeAttackValue">攻撃の除外値</label>
+        <input type="number" id="excludeAttackValue" value="4">
+      </div>
+      
       <div class="form-group">
         <label for="sheatheValue">納刀</label>
         <input type="number" id="sheatheValue" value="8">
+      </div>
+
+      <div class="form-group">
+        <label for="excludeSheatheValue">納刀の除外値</label>
+        <input type="number" id="excludeSheatheValue" value="6">
       </div>
     </div>
     
