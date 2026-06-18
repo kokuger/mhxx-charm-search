@@ -90,54 +90,49 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="slot">スロット数</label>
-      <select id="slot">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3" selected>3</option>
-      </select>
-    </div>
-    
-    <div class="form-group">
-      <label>抽選元</label>
-      <div class="toggle-group">
-        <input type="radio" id="originMaka" name="originType" value="マカ" checked>
-        <label for="originMaka" class="toggle-option">マカ</label>
-    
-        <input type="radio" id="originTankou" name="originType" value="炭鉱">
-        <label for="originTankou" class="toggle-option">炭鉱</label>
+    <div class="row">
+      <div class="form-group">
+        <label for="slot">スロット数</label>
+        <select id="slot">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3" selected>3</option>
+        </select>
       </div>
-    </div>
-
-    <div class="form-group">
-      <label for="charmKind">お守り種類</label>
-    
-      <select id="charmKind">
-        <option value="blue" selected>風化したお守り</option>
-        <option value="red">古びたお守り(動作確認してないw)</option>
-        <option value="yellow">光るお守り(動かないw)</option>
-        <option value="white">なぞのお守り(動かないw)</option>
-      </select>
+      <div class="form-group">
+        <label for="charmKind">お守り種類</label>
+      
+        <select id="charmKind">
+          <option value="blue" selected>風化したお守り</option>
+          <option value="red">古びたお守り(動作確認してないw)</option>
+          <option value="yellow">光るお守り(動かないw)</option>
+          <option value="white">なぞのお守り(動かないw)</option>
+        </select>
+      </div>
     </div>
     
     <div class="row">
       <div class="form-group">
-        <label for="startFrame">検索開始フレーム</label>
-        <input type="number" id="startFrame" value="0" min="0" step="1">
+        <label>抽選元</label>
+        <div class="toggle-group">
+          <input type="radio" id="originMaka" name="originType" value="マカ" checked>
+          <label for="originMaka" class="toggle-option">マカ</label>
+      
+          <input type="radio" id="originTankou" name="originType" value="炭鉱">
+          <label for="originTankou" class="toggle-option">炭鉱</label>
+        </div>
       </div>
       <div class="form-group">
         <label for="maxFrames">検索フレーム数</label>
         <input type="number" id="maxFrames" value="10000000" min="1" step="1000">
       </div>
+      <div class="form-group">
+        <label for="displayLimit">表示件数</label>
+        <input type="number" id="displayLimit" value="10" min="1" step="1">
+      </div>
     </div>
-
-    <div class="form-group">
-      <label for="displayLimit">表示件数</label>
-      <input type="number" id="displayLimit" value="10" min="1" step="1">
-    </div>
-
+    
     <p>・斬味7、達人10、S3を検索するには100000000フレームの検索が必要、私のスマホだと1分くらい検索に時間かかります</p>
     <p>・リンクになっているframeをタップすると、そのframeの前後のお守りを別ページで表示します</p>
     
