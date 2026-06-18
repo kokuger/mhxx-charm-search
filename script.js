@@ -764,7 +764,7 @@ if (button) {
   const maxFrames = Number(document.getElementById("maxFrames").value);
   const originType = document.querySelector('input[name="originType"]:checked').value;
   const charmKind = document.getElementById("charmKind").value;
-  const startFrame = Number(document.getElementById("startFrame").value);
+  const startFrame = 0;
   const displayLimit = Number(document.getElementById("displayLimit").value);
   const displayMode = document.querySelector('input[name="displayMode"]:checked').value;
   
