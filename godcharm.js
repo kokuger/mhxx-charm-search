@@ -14,11 +14,26 @@ const targetSkillNames = [
   { id: "sheatheValue", name: "納刀" }
 ];
 
+const excludeSkillNames = [
+  { id: "excludeSharpnessValue", name: "斬味" },
+  { id: "excludeWeaknessValue", name: "痛撃" },
+  { id: "excludeChainValue", name: "連撃" },
+  { id: "excludeCriticalValue", name: "会心" },
+  { id: "excludeSpiritValue", name: "闘魂" },
+  { id: "excludeExpertValue", name: "達人" },
+  { id: "excludeAttackValue", name: "攻撃" },
+  { id: "excludeSheatheValue", name: "納刀" }
+];
+
+function getSkillIdByName(name) {
+  return skill.findIndex(s => s.trim() === name);
+}
+
 function getTargetSkillConditions() {
   return targetSkillNames
     .map(item => {
       const value = Number(document.getElementById(item.id).value || 0);
-      const skillId = skill.findIndex(s => s.trim() === item.name);
+      const skillId = getSkillIdByName(item.name);
 
       return {
         name: item.name,
@@ -29,7 +44,38 @@ function getTargetSkillConditions() {
     .filter(item => item.skillId !== -1 && item.value > 0);
 }
 
-function isGodCharmHit(c, conditions, slotValue) {
+function getExcludeSkillConditions() {
+  return excludeSkillNames
+    .map(item => {
+      const value = Number(document.getElementById(item.id).value || 0);
+      const skillId = getSkillIdByName(item.name);
+
+      return {
+        name: item.name,
+        skillId,
+        value
+      };
+    })
+    .filter(item => item.skillId !== -1 && item.value > 0);
+}
+
+function hasExcludedLowSkill(c, excludeConditions) {
+  const charmSkills = [
+    { skillId: c[0], value: c[1] },
+    { skillId: c[2], value: c[3] }
+  ];
+
+  return excludeConditions.some(condition => {
+    return charmSkills.some(charmSkill => {
+      return (
+        charmSkill.skillId === condition.skillId &&
+        charmSkill.value <= condition.value
+      );
+    });
+  });
+}
+
+function isGodCharmHit(c, conditions, excludeConditions, slotValue) {
   if (c[4] !== slotValue) return false;
 
   // 第二スキルなしは除外
@@ -40,16 +86,19 @@ function isGodCharmHit(c, conditions, slotValue) {
   const skill1Id = c[0];
   const skill2Id = c[2];
 
-  // 第一・第二スキルが両方とも指定8スキル内でなければ除外
+  // 第一・第二スキルが両方とも8スキル内でなければ除外
   if (!targetSkillIds.includes(skill1Id)) return false;
   if (!targetSkillIds.includes(skill2Id)) return false;
+
+  // 除外値以下のスキルを含む場合は除外
+  if (hasExcludedLowSkill(c, excludeConditions)) return false;
 
   const charmSkills = [
     { skillId: skill1Id, value: c[1] },
     { skillId: skill2Id, value: c[3] }
   ];
 
-  // どちらかのスキルが入力値以上ならヒット
+  // OR検索：どちらかのスキルが入力値以上ならヒット
   return conditions.some(condition => {
     return charmSkills.some(charmSkill => {
       return (
@@ -60,13 +109,21 @@ function isGodCharmHit(c, conditions, slotValue) {
   });
 }
 
-async function searchGodCharmsAsync(startFrame, originIndex, conditions, slotValue, onProgress) {
+async function searchGodCharmsAsync(
+  startFrame,
+  originIndex,
+  conditions,
+  excludeConditions,
+  slotValue,
+  onProgress
+) {
   init();
 
   const results = [];
   const endFrame = startFrame + GOD_CHARM_SEARCH_FRAMES;
   const chunkSize = 3000;
 
+  // startFrame の位置まで進める
   for (let i = 0; i < startFrame + 7; i++) {
     roll();
   }
@@ -74,7 +131,7 @@ async function searchGodCharmsAsync(startFrame, originIndex, conditions, slotVal
   for (let frame = startFrame; frame < endFrame; frame++) {
     const c = getCharm(originIndex);
 
-    if (isGodCharmHit(c, conditions, slotValue)) {
+    if (isGodCharmHit(c, conditions, excludeConditions, slotValue)) {
       results.push({
         frame,
         watch: watch(frame),
@@ -115,7 +172,9 @@ if (godCharmButton) {
     const originType = document.querySelector('input[name="originType"]:checked').value;
     const originIndex = origin.indexOf(originType);
     const slotValue = Number(document.getElementById("slotValue").value);
+
     const conditions = getTargetSkillConditions();
+    const excludeConditions = getExcludeSkillConditions();
 
     if (conditions.length === 0) {
       status.textContent = "";
@@ -130,6 +189,7 @@ if (godCharmButton) {
         startFrame,
         originIndex,
         conditions,
+        excludeConditions,
         slotValue,
         (done, total) => {
           const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
